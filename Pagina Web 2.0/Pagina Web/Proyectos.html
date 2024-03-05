@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>SDGP - Sistema de Gestión de Proyectos</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/Proyectos.css">
+  </head>
+  <body>
+    <header>
+      <h1>SDGP - Sistema de Gestión de Proyectos</h1>
+      <nav>
+        <ul>
+          <li><a href="usuario.html">Usuario</a></li>
+          <li><a href="VisualizarProyectos.html">Proyectos</a></li>
+          <li><a href="assets/MANUAL-HTML-Y-CSS.pdf" download>Documentos</a></li>
+          <li><a href="usuario.html">Cuenta</a></li>
+          <li><a href="colaboradores.html">Colaboradores</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>Proyectos</h2>
+      <table id="tablaProyectos">
+        <thead>
+          <tr>
+            <th>Nombre Proyecto</th>
+            <th>Estado del Proyecto</th>
+            <th>Actualizaciones del Proyecto</th>
+            <th>Tareas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <!-- Formulario para agregar nuevos proyectos -->
+      <form id="formularioProyecto">
+        <label for="nombreProyecto">Nombre del Proyecto:</label>
+        <input type="text" id="nombreProyecto" name="nombreProyecto" required>
+        <label for="estadoProyecto">Estado del Proyecto:</label>
+        <input type="text" id="estadoProyecto" name="estadoProyecto" required>
+        <label for="actualizacionproyecto">Actualizacion del Proyecto:</label>
+        <input type="text" id="actualizacionproyecto" name="actualizacionproyecto" required>
+        <label for="tareas">Tareas:</label>
+        <input type="text" id="tareas" name="tareas" required>
+        <button type="button" onclick="agregarProyecto()">Agregar Proyecto</button>
+      </form>
+      <section>
+        <br>
+        <a href="VisualizarProyectos.html"><button class="volver">Visualizar Proyectos</button></a>
+        <br>
+      </section>
+    </main>
+    <script>
+      function agregarProyecto() {
+        var nombreProyecto = document.getElementById("nombreProyecto").value;
+        var estadoProyecto = document.getElementById("estadoProyecto").value;
+        var actualizacionProyecto = document.getElementById("actualizacionproyecto").value;
+        var tareas = document.getElementById("tareas").value;
+
+        // Crear nueva fila
+        var table = document.getElementById("tablaProyectos").getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.rows.length);
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+        var cell4 = newRow.insertCell(3);
+        var cell5 = newRow.insertCell(4);
+        var cell6 = newRow.insertCell(5);
+
+        // Agregar datos a la nueva fila
+        cell1.innerHTML = nombreProyecto;
+        cell2.innerHTML = estadoProyecto;
+        cell3.innerHTML = actualizacionProyecto;
+        cell4.innerHTML = tareas;
+        cell5.innerHTML = '<button onclick="verProyecto()">Ver</button>' +
+                          '<button onclick="editarProyecto()">Editar</button>' +
+                          '<button onclick="eliminarProyecto(this)">Eliminar</button>';
+
+        // Guardar la lista actualizada en localStorage
+        actualizarListaProyectosLocalStorage();
+      }
+
+      function eliminarProyecto(button) {
+        var row = button.parentNode.parentNode;
+        var table = document.getElementById("tablaProyectos").getElementsByTagName('tbody')[0];
+        table.removeChild(row);
+
+        // Guardar la lista actualizada en localStorage
+        actualizarListaProyectosLocalStorage();
+      }
+
+      function verProyecto() {
+        console.log("Ver proyecto");
+      }
+
+      function editarProyecto() {
+        console.log("Editar proyecto");
+      }
+
+      // Función para obtener la lista de proyectos desde localStorage
+      function obtenerListaProyectos() {
+        var proyectosGuardados = localStorage.getItem("proyectos");
+        return proyectosGuardados ? JSON.parse(proyectosGuardados) : [];
+      }
+
+      // Función para actualizar la lista de proyectos en localStorage
+      function actualizarListaProyectosLocalStorage() {
+        var listaProyectos = obtenerListaProyectos();
+        localStorage.setItem("proyectos", JSON.stringify(listaProyectos));
+      }
+
+      window.onload = function () {
+        // Cargar la lista de proyectos desde localStorage al cargar la página
+        var proyectosGuardados = localStorage.getItem("proyectos");
+        if (proyectosGuardados) {
+          var listaProyectos = JSON.parse(proyectosGuardados);
+          cargarProyectosEnTabla(listaProyectos);
+        }
+      };
+
+      // Función para cargar proyectos en la tabla
+      function cargarProyectosEnTabla(listaProyectos) {
+        var table = document.getElementById("tablaProyectos").getElementsByTagName('tbody')[0];
+        listaProyectos.forEach(function (proyecto) {
+          var newRow = table.insertRow(table.rows.length);
+          var cell1 = newRow.insertCell(0);
+          var cell2 = newRow.insertCell(1);
+          var cell3 = newRow.insertCell(2);
+          var cell4 = newRow.insertCell(3);
+          var cell5 = newRow.insertCell(4);
+          var cell6 = newRow.insertCell(5);
+
+          cell1.innerHTML = proyecto.nombre;
+          cell2.innerHTML = proyecto.estado;
+          cell3.innerHTML = proyecto.actualizacion;
+          cell4.innerHTML = proyecto.tareas;
+          cell5.innerHTML = '<button onclick="verProyecto()">Ver</button>' +
+                            '<button onclick="editarProyecto()">Editar</button>' +
+                            '<button onclick="eliminarProyecto(this)">Eliminar</button>';
+        });
+      }
+    </script>
+  </body>
+</html>
+
+

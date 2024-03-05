@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/administrador.css">
+    <title>Administrador de Usuarios</title>
+</head>
+<body>
+    <h1>Administrador de Usuarios</h1>
+    <input type="text" id="buscar" name="buscar" placeholder="Buscar" oninput="filtrarTabla()">
+    <hr>
+    <table id="tablaUsuarios">
+        <tr>
+            <th>Nombres</th>
+            <th>Email</th>
+            <th>Ubicacion</th>
+            <th>Unido</th>
+            <th>Permisos</th>
+            <th></th>
+        </tr>
+    </table>
+    <section>
+        <br>
+        <a href="Proyectos.html"><button class="volver">Pagina Principal</button></a>
+        <br>
+    </section>
+    <form id="formularioUsuario">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br>
+        <label for="ubicacion">Ubicación:</label>
+        <input type="text" id="ubicacion" name="ubicacion" required>
+        <br>
+        <label for="permisos">Permisos:</label>
+        <select id="permisos" name="permisos">
+            <option value="admin">Administrador</option>
+            <option value="usuario">Usuario</option>
+        </select>
+        <br>
+        <button type="submit">Agregar Usuario</button>
+    </form>
+    <script>
+        const tablaUsuarios = document.getElementById('tablaUsuarios');
+        const formularioUsuario = document.getElementById('formularioUsuario');
+        const campoBuscar = document.getElementById('buscar');
+
+        function agregarUsuario(nombre, email, ubicacion, permisos) {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${nombre}</td>
+                <td>${email}</td>
+                <td>${ubicacion}</td>
+                <td>${new Date().toLocaleDateString()}</td>
+                <td>${permisos}</td>
+                <td><button class="eliminar">Eliminar</button></td>
+            `;
+            tablaUsuarios.appendChild(fila);
+        }
+
+        formularioUsuario.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const ubicacion = document.getElementById('ubicacion').value;
+            const permisos = document.getElementById('permisos').value;
+            agregarUsuario(nombre, email, ubicacion, permisos);
+            formularioUsuario.reset();
+        });
+
+        tablaUsuarios.addEventListener('click', (evento) => {
+            if (evento.target.classList.contains('eliminar')) {
+                const fila = evento.target.parentElement.parentElement;
+                tablaUsuarios.removeChild(fila);
+            }
+        });
+
+        function filtrarTabla() {
+            const filtro = campoBuscar.value.toUpperCase();
+            const filas = tablaUsuarios.getElementsByTagName('tr');
+
+            for (let i = 1; i < filas.length; i++) {
+                const celdas = filas[i].getElementsByTagName('td');
+                let mostrarFila = false;
+
+                for (let j = 0; j < celdas.length; j++) {
+                    const textoCelda = celdas[j].innerText.toUpperCase();
+                    if (textoCelda.includes(filtro)) {
+                        mostrarFila = true;
+                        break;
+                    }
+                }
+
+                filas[i].style.display = mostrarFila ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
